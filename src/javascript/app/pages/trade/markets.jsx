@@ -90,14 +90,14 @@ class Markets extends React.Component {
         const market_arr = Object.entries(this.markets).sort((a, b) => sortSubmarket(a[0], b[0]));
         if ((is_malta || is_uk) && Client.getAccountOfType('virtual')) {
             final_markets_arr = market_arr.filter(market => is_synthetic(market));
-            //final_markets_arr.reduce works as Object.fromEntries(final_markets_arr) but some browsers don't support Object.fromEntries => trackjs errors
+            // final_markets_arr.reduce works as Object.fromEntries(final_markets_arr) but some browsers don't support Object.fromEntries => trackjs errors
             final_market_obj = final_markets_arr.reduce((acc, it) => ({ ...acc, [it[0]]: it[1] }),{});
             market_symbol = Object.keys(final_market_obj)[0];
             const submarket = Object.keys(final_market_obj[market_symbol].submarkets).sort(sortSubmarket)[0];
             underlying_symbol = Object.keys(final_market_obj[market_symbol].submarkets[submarket].symbols).sort()[0];
         } else {
             final_markets_arr = market_arr.filter(market => is_not_crypto(market));
-            //final_markets_arr.reduce works as Object.fromEntries(final_markets_arr) but some browsers don't support Object.fromEntries => trackjs errors
+            // final_markets_arr.reduce works as Object.fromEntries(final_markets_arr) but some browsers don't support Object.fromEntries => trackjs errors
             final_market_obj = final_markets_arr.reduce((acc, it) => ({ ...acc, [it[0]]: it[1] }),{});
         }
         this.markets_all = final_markets_arr.slice();

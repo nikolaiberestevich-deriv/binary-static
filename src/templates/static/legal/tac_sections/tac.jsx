@@ -111,7 +111,6 @@ const Tac = () => (
        </p>
        </ul>
        </p>
-       
         <p>{it.L('No person shall abuse this site for the purpose of money laundering. The Company employs best-practice anti-money laundering procedures. All transactions are checked to prevent money laundering, which may have several effects on clients. The Company reserves the right to refuse to do business with, to discontinue to do business with, and to reverse the transactions of clients who do not accept or adhere to these anti-money laundering processes. Acceptable funds should not originate from criminal activity. The Company is bound to report suspicious transactions to relevant authorities.')}</p>
         <p>{it.L('The anti-money laundering processes have the following effects on clients:')}
             <ul className='bullet'>

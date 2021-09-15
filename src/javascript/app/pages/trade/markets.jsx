@@ -79,7 +79,8 @@ class Markets extends React.Component {
             underlying_symbol = Object.keys(this.markets[market_symbol].submarkets[submarket].symbols).sort()[0];
         }
         const market_arr = Object.entries(this.markets).sort((a, b) => sortSubmarket(a[0], b[0]));
-        const market_obj = Object.fromEntries(market_arr);
+        // market_arr.reduce works as Object.fromEntries(market_arr) but some browsers don't support Object.fromEntries => trackjs errors
+        const market_obj = market_arr.reduce((acc, market) => ({ ...acc, [market[0]]: market[1] }),{});
 
         this.markets_all = market_arr.slice();
         if (!(market_symbol in this.markets)) {

@@ -22,8 +22,10 @@ const getVisibleElement = require('../../../_common/common_functions').getVisibl
 const localize          = require('../../../_common/localize').localize;
 const State             = require('../../../_common/storage').State;
 const getPropertyValue  = require('../../../_common/utility').getPropertyValue;
+const ClientBase       = require('../../../_common/base/client_base');
 
 const Process = (() => {
+    const mlt_fx_countries_list = ['au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
     /*
      * This function process the active symbols to get markets
      * and underlying list
@@ -41,12 +43,14 @@ const Process = (() => {
 
                 commonTrading.displayMarkets();
                 processMarket();
+                if ((ClientBase.get('landing_company_shortcode') === 'malta' || 'maltainvest') || (mlt_fx_countries_list.indexOf(ClientBase.get('landing_company_shortcode')) > -1)){
+                    $('#content').empty().html($('<div/>', { class: 'container' }).append($('<p/>', { class: 'notice-msg center-text', text: localize('Unfortunately, trading options isn\'t possible in your country') })));
+                }
             } else {
                 $('#content').empty().html($('<div/>', { class: 'container' }).append($('<p/>', { class: 'notice-msg center-text', text: localize('Trading is unavailable at this time.') })));
             }
         });
     };
-
     /*
      * Function to call when market has changed
      */

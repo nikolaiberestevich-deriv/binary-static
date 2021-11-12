@@ -32,7 +32,9 @@ const Process = (() => {
      */
     const processActiveSymbols = () => {
         BinarySocket.send({ active_symbols: 'brief' }).then((response) => {
-            if (response.active_symbols && response.active_symbols.length) {
+            if ((ClientBase.get('landing_company_shortcode') === 'malta' || 'maltainvest') || (mlt_fx_countries_list.indexOf(ClientBase.get('landing_company_shortcode')) > -1)){
+                $('#content').empty().html($('<div/>', { class: 'container' }).append($('<p/>', { class: 'notice-msg center-text', text: localize('Unfortunately, trading options isn\'t possible in your country') })));
+            } else if (response.active_symbols && response.active_symbols.length) {
                 // populate the Symbols object
                 Symbols.details(response);
 
@@ -43,9 +45,6 @@ const Process = (() => {
 
                 commonTrading.displayMarkets();
                 processMarket();
-                if ((ClientBase.get('landing_company_shortcode') === 'malta' || 'maltainvest') || (mlt_fx_countries_list.indexOf(ClientBase.get('landing_company_shortcode')) > -1)){
-                    $('#content').empty().html($('<div/>', { class: 'container' }).append($('<p/>', { class: 'notice-msg center-text', text: localize('Unfortunately, trading options isn\'t possible in your country') })));
-                }
             } else {
                 $('#content').empty().html($('<div/>', { class: 'container' }).append($('<p/>', { class: 'notice-msg center-text', text: localize('Trading is unavailable at this time.') })));
             }

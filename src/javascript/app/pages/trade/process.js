@@ -33,9 +33,9 @@ const Process = (() => {
      */
     const processActiveSymbols = () => {
         BinarySocket.send({ active_symbols: 'brief' }).then((response) => {
-            if ((ClientBase.get('landing_company_shortcode') === 'malta' || 'maltainvest')
-            || (mlt_fx_countries_list.indexOf(Client.get('residence')) > -1)
-            || (mlt_fx_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)){
+            if (ClientBase.get('landing_company_shortcode') === 'malta' || ClientBase.get('landing_company_shortcode') === 'maltainvest'
+            || mlt_fx_countries_list.indexOf(Client.get('residence')) > -1
+            || mlt_fx_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1){
                 $('#content').empty().html($('<div/>', { class: 'container' }).append($('<p/>', { class: 'notice-msg center-text', text: localize('Unfortunately, trading options isn\'t possible in your country') })));
             } else if (response.active_symbols && response.active_symbols.length) {
                 // populate the Symbols object

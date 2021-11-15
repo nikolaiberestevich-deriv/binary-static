@@ -38,9 +38,7 @@ const AssetIndexUI = (() => {
         //     || mlt_fx_countries_list.indexOf(Client.get('residence')) > -1
         //     || mlt_fx_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)
             ){ $container.empty();
-               
-
-$('#empty-asset-index').setVisibility(1);
+                    $('#empty-asset-index').setVisibility(1);
             $('#trading-times').append($('<p/>', { class: 'notice-msg center-text invisible',id='empty-trading-times', text: localize('Unfortunately, trading options isn\'t possible in your country') })));
         // if (!asset_index.length) {
         //     $container.empty();

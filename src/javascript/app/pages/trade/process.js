@@ -33,9 +33,13 @@ const Process = (() => {
      */
     const processActiveSymbols = () => {
         BinarySocket.send({ active_symbols: 'brief' }).then((response) => {
-            if (ClientBase.get('landing_company_shortcode') === 'malta' || ClientBase.get('landing_company_shortcode') === 'maltainvest'
-            || mlt_fx_countries_list.indexOf(Client.get('residence')) > -1
-            || mlt_fx_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1){
+            // check of user country and license
+            const is_show_country_error = ClientBase.isLoggedIn() &&
+            (ClientBase.get('landing_company_shortcode') === 'malta' || ClientBase.get('landing_company_shortcode') === 'maltainvest'
+                || mlt_fx_countries_list.indexOf(Client.get('residence')) > -1
+                || mlt_fx_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1);
+
+            if (is_show_country_error){
                 $('#content').empty().html($('<div/>', { class: 'container' }).append($('<p/>', { class: 'notice-msg center-text', text: localize('Unfortunately, trading options isn\'t possible in your country') })));
             } else if (response.active_symbols && response.active_symbols.length) {
                 // populate the Symbols object

@@ -34,14 +34,14 @@ const AssetIndexUI = (() => {
     };
 
     const populateTable = () => {
-        const mlt_fx_countries_list = ['au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
+        const mlt_countries_list = ['au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
     
         if (!active_symbols || !asset_index) return;
         
         if (ClientBase.isLoggedIn() &&
-        (ClientBase.get('landing_company_shortcode') === 'malta' || ClientBase.get('landing_company_shortcode') === 'maltainvest'
-            || mlt_fx_countries_list.indexOf(Client.get('residence')) > -1
-            || mlt_fx_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)
+        (ClientBase.get('landing_company_shortcode') === 'malta'
+            || mlt_countries_list.indexOf(Client.get('residence')) > -1
+            || mlt_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)
         ){
             // $container.empty();
             $('#asset_index_wrapper').replaceWith($('<p/>', { class: 'notice-msg center-text', text: localize('Unfortunately, trading options isn\'t possible in your country') }));

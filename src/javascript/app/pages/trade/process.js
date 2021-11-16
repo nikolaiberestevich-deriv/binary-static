@@ -26,7 +26,6 @@ const ClientBase       = require('../../../_common/base/client_base');
 const Client           = require('../../base/client');
 
 const Process = (() => {
-    const mlt_fx_countries_list = ['au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
     /*
      * This function process the active symbols to get markets
      * and underlying list
@@ -35,9 +34,9 @@ const Process = (() => {
         BinarySocket.send({ active_symbols: 'brief' }).then((response) => {
             // check of user country and license
             const is_show_country_error = ClientBase.isLoggedIn() &&
-            (ClientBase.get('landing_company_shortcode') === 'malta' || ClientBase.get('landing_company_shortcode') === 'maltainvest'
-                || mlt_fx_countries_list.indexOf(Client.get('residence')) > -1
-                || mlt_fx_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1);
+            (ClientBase.get('landing_company_shortcode') === 'malta'
+                || ['be'].indexOf(Client.get('residence')) > -1
+                || ['be'].indexOf(State.getResponse('website_status.clients_country')) > -1);
 
             if (is_show_country_error){
                 $('#content').empty().html($('<div/>', { class: 'container' }).append($('<p/>', { class: 'notice-msg center-text', text: localize('Unfortunately, trading options isn\'t possible in your country') })));

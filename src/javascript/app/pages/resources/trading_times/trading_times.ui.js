@@ -10,6 +10,7 @@ const showLoadingImage = require('../../../../_common/utility').showLoadingImage
 const toISOFormat      = require('../../../../_common/string_util').toISOFormat;
 const Client           = require('../../../base/client');
 const State            = require('../../../../../javascript/_common/storage').State;
+const ClientBase       = require('../../../../_common/base/client_base');
 
 const TradingTimesUI = (() => {
     let $date,
@@ -100,6 +101,15 @@ const TradingTimesUI = (() => {
         const is_uk_residence = (Client.get('residence') === 'gb' || State.getResponse('website_status.clients_country') === 'gb');
         
         if (!active_symbols || !trading_times) return;
+        if (ClientBase.isLoggedIn() &&
+        (ClientBase.get('landing_company_shortcode') === 'malta'
+            || ['be'].indexOf(Client.get('residence')) > -1
+            || ['be'].indexOf(State.getResponse('website_status.clients_country')) > -1)
+        ){
+            $('#trading-times').empty();
+            $('#trading-date-container').replaceWith($('<p/>', { class: 'notice-msg center-text', text: localize('Unfortunately, trading options isn\'t possible in your country') }));
+            return;
+        }
         if (!active_symbols.length) {
             $container.empty();
             $date_container.setVisibility(0);

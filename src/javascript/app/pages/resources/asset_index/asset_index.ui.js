@@ -4,6 +4,9 @@ const Table            = require('../../../common/attach_dom/table');
 const Login            = require('../../../../_common/base/login');
 const CommonFunctions  = require('../../../../_common/common_functions');
 const showLoadingImage = require('../../../../_common/utility').showLoadingImage;
+const ClientBase       = require('../../../../_common/base/client_base');
+const Client           = require('../../../base/client');
+const State             = require('../../../../_common/storage').State;
 const localize          = require('../../../../_common/localize').localize;
 
 const AssetIndexUI = (() => {
@@ -31,24 +34,28 @@ const AssetIndexUI = (() => {
     };
 
     const populateTable = () => {
+        const mlt_fx_countries_list = ['au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
+    
         if (!active_symbols || !asset_index) return;
-        if (true
-        //     ClientBase.isLoggedIn() &&
-        // (ClientBase.get('landing_company_shortcode') === 'malta' || ClientBase.get('landing_company_shortcode') === 'maltainvest'
-        //     || mlt_fx_countries_list.indexOf(Client.get('residence')) > -1
-        //     || mlt_fx_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)
-            ){ $container.empty();
-                    $('#empty-asset-index').setVisibility(1);
-            $('#trading-times').append($('<p/>', { class: 'notice-msg center-text invisible',id='empty-trading-times', text: localize('Unfortunately, trading options isn\'t possible in your country') })));
-        // if (!asset_index.length) {
-        //     $container.empty();
-        //     $('#empty-asset-index').setVisibility(1);
-        //     const empty_asset_index_btn_login = CommonFunctions.getElementById('empty-asset-index-btn-login');
-        //     empty_asset_index_btn_login.removeEventListener('click', loginOnClick);
-        //     empty_asset_index_btn_login.addEventListener('click', loginOnClick);
-        //     return;
-        // }
-            }
+        
+        if (ClientBase.isLoggedIn() &&
+        (ClientBase.get('landing_company_shortcode') === 'malta' || ClientBase.get('landing_company_shortcode') === 'maltainvest'
+            || mlt_fx_countries_list.indexOf(Client.get('residence')) > -1
+            || mlt_fx_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)
+        ){
+            // $container.empty();
+            $('#asset_index_wrapper').replaceWith($('<p/>', { class: 'notice-msg center-text', text: localize('Unfortunately, trading options isn\'t possible in your country') }));
+        }
+
+        if (!asset_index.length) {
+            $container.empty();
+            $('#empty-asset-index').setVisibility(1);
+            const empty_asset_index_btn_login = CommonFunctions.getElementById('empty-asset-index-btn-login');
+            empty_asset_index_btn_login.removeEventListener('click', loginOnClick);
+            empty_asset_index_btn_login.addEventListener('click', loginOnClick);
+            return;
+        }
+
         $('#errorMsg').setVisibility(0);
         asset_index    = AssetIndex.getAssetIndexData(asset_index, active_symbols);
         market_columns = AssetIndex.getMarketColumns();

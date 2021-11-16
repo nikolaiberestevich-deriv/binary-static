@@ -31,6 +31,7 @@ const AssetIndexUI = (() => {
             sendRequest();
         }
         $container.tabs();
+        
     };
 
     const populateTable = () => {
@@ -38,17 +39,18 @@ const AssetIndexUI = (() => {
     
         if (!active_symbols || !asset_index) return;
         
-        if (ClientBase.isLoggedIn() &&
-        (ClientBase.get('landing_company_shortcode') === 'malta'
-            || mlt_countries_list.indexOf(Client.get('residence')) > -1
-            || mlt_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)
-        ){
-            // $container.empty();
-            $('#asset_index_wrapper').replaceWith($('<p/>', { class: 'notice-msg center-text', text: localize('Unfortunately, trading options isn\'t possible in your country') }));
+        if (ClientBase.isLoggedIn() && true
+        // (ClientBase.get('landing_company_shortcode') === 'malta'
+        //     || mlt_countries_list.indexOf(Client.get('residence')) > -1
+        //     || mlt_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)
+        ){ 
+            $('#asset-index').empty()
+            $('#empty-asset-index').empty().append(localize('Unfortunately, trading options isn\'t possible in your country')).setVisibility(1);
+        return
         }
 
         if (!asset_index.length) {
-            $container.empty();
+            $('#content').setVisibility(1);
             $('#empty-asset-index').setVisibility(1);
             const empty_asset_index_btn_login = CommonFunctions.getElementById('empty-asset-index-btn-login');
             empty_asset_index_btn_login.removeEventListener('click', loginOnClick);

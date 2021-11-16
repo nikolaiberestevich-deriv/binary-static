@@ -102,16 +102,19 @@ const TradingTimesUI = (() => {
         const mlt_countries_list = ['au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
        
         if (!active_symbols || !trading_times) return;
-        if (ClientBase.isLoggedIn() &&
-        (ClientBase.get('landing_company_shortcode') === 'malta'
-            || mlt_countries_list.indexOf(Client.get('residence')) > -1
-            || mlt_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)
+        if (ClientBase.isLoggedIn() &&true
+        // (ClientBase.get('landing_company_shortcode') === 'malta'
+        //     || mlt_countries_list.indexOf(Client.get('residence')) > -1
+        //     || mlt_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)
 
-        ){
-            $('#trading-times').empty();
-            $('#trading-date-container').replaceWith($('<p/>', { class: 'notice-msg center-text', text: localize('Unfortunately, trading options isn\'t possible in your country') }));
+        ){ $container.empty();
+            $container.empty();
+            $date_container.setVisibility(0);
+            $date_notice.setVisibility(0);
+            $empty_trading_times.setVisibility(1);
+            $('#empty-trading-times').empty().append(localize('Unfortunately, trading options isn\'t possible in your country'));
             return;
-        }
+           }
         if (!active_symbols.length) {
             $container.empty();
             $date_container.setVisibility(0);

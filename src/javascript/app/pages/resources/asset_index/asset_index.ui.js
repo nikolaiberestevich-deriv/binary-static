@@ -40,9 +40,10 @@ const AssetIndexUI = (() => {
         if (!active_symbols || !asset_index) return;
         
         if (ClientBase.isLoggedIn() && true
-        // (ClientBase.get('landing_company_shortcode') === 'malta'
-        //     || mlt_countries_list.indexOf(Client.get('residence')) > -1
-        //     || mlt_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)
+        (ClientBase.get('landing_company_shortcode') === 'malta'
+            || ClientBase.get('landing_company_shortcode') === 'maltainvest'
+            || mlt_countries_list.indexOf(Client.get('residence')) > -1
+            || mlt_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)
         ){ 
             $('#asset-index').empty()
             $('#empty-asset-index').empty().append(localize('Unfortunately, trading options isn\'t possible in your country')).setVisibility(1);

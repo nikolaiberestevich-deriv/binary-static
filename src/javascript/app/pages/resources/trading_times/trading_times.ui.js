@@ -102,10 +102,11 @@ const TradingTimesUI = (() => {
         const mlt_countries_list = ['au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
        
         if (!active_symbols || !trading_times) return;
-        if (ClientBase.isLoggedIn() &&true
-        // (ClientBase.get('landing_company_shortcode') === 'malta'
-        //     || mlt_countries_list.indexOf(Client.get('residence')) > -1
-        //     || mlt_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)
+        if (ClientBase.isLoggedIn() &&
+        (ClientBase.get('landing_company_shortcode') === 'malta'
+            || ClientBase.get('landing_company_shortcode') === 'maltainvest'
+            || mlt_countries_list.indexOf(Client.get('residence')) > -1
+            || mlt_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)
 
         ){ $container.empty();
             $container.empty();

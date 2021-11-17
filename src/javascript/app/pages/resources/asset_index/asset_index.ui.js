@@ -49,7 +49,7 @@ const AssetIndexUI = (() => {
         }
 
         if (!asset_index.length) {
-            $('#content').setVisibility(1);
+            $container.empty();
             $('#empty-asset-index').setVisibility(1);
             const empty_asset_index_btn_login = CommonFunctions.getElementById('empty-asset-index-btn-login');
             empty_asset_index_btn_login.removeEventListener('click', loginOnClick);

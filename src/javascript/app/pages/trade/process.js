@@ -33,7 +33,7 @@ const Process = (() => {
     const processActiveSymbols = () => {
         BinarySocket.send({ active_symbols: 'brief' }).then((response) => {
             // check of user country and license
-            const mlt_countries_list = ['gb','au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
+            const mlt_countries_list = ['im','gb','au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
             const is_show_country_error = ClientBase.isLoggedIn() &&
             (['malta','iom','maltainvest'].indexOf(ClientBase.get('landing_company_shortcode')) > -1
             || mlt_countries_list.indexOf(Client.get('residence')) > -1

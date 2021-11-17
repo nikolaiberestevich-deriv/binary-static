@@ -35,7 +35,7 @@ const AssetIndexUI = (() => {
     };
 
     const populateTable = () => {
-        const mlt_countries_list = ['gb','au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
+        const mlt_countries_list = ['im','gb','au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
         if (!active_symbols || !asset_index) return;
         
         if (ClientBase.isLoggedIn() &&

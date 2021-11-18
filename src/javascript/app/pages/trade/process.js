@@ -35,7 +35,9 @@ const Process = (() => {
             // check of user country and license
             const mlt_countries_list = ['au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
             const is_show_country_error = ClientBase.isLoggedIn() &&
-            (mlt_countries_list.indexOf(Client.get('residence')) > -1
+            (ClientBase.get('landing_company_shortcode') === 'malta'
+            || ClientBase.get('landing_company_shortcode') === 'maltainvest'
+             || mlt_countries_list.indexOf(Client.get('residence')) > -1
             || mlt_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1);
 
             if (is_show_country_error){

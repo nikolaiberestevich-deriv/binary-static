@@ -103,7 +103,9 @@ const TradingTimesUI = (() => {
        
         if (!active_symbols || !trading_times) return;
         if (ClientBase.isLoggedIn() &&
-        (mlt_countries_list.indexOf(Client.get('residence')) > -1
+        (ClientBase.get('landing_company_shortcode') === 'malta'
+        || ClientBase.get('landing_company_shortcode') === 'maltainvest'
+        || mlt_countries_list.indexOf(Client.get('residence')) > -1
         || mlt_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)){
             $container.empty();
             $container.empty();

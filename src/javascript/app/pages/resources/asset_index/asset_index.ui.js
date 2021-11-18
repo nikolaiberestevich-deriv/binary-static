@@ -35,12 +35,10 @@ const AssetIndexUI = (() => {
     };
 
     const populateTable = () => {
-        const mlt_countries_list = ['im','gb','au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
+        const mlt_countries_list = ['au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
         if (!active_symbols || !asset_index) return;
-        
         if (ClientBase.isLoggedIn() &&
-        (['malta','iom'].indexOf(ClientBase.get('landing_company_shortcode')) > -1
-            || mlt_countries_list.indexOf(Client.get('residence')) > -1
+         (mlt_countries_list.indexOf(Client.get('residence')) > -1
             || mlt_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)
         ){
             $('#asset-index').empty();

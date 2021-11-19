@@ -101,9 +101,11 @@ const TradingTimesUI = (() => {
         const is_uk_residence = (Client.get('residence') === 'gb' || State.getResponse('website_status.clients_country') === 'gb');
         const is_be_client = (Client.get('residence') === 'be' || State.getResponse('website_status.clients_country') === 'be');
         const is_logged = ClientBase.isLoggedIn();
+        const is_mf_client = Client.hasAccountType('gaming') && (['it','fr','de','lu','es','gr','mt'].indexOf(State.getResponse('website_status.clients_country')) > -1
+        || ['it','fr','de','lu','es','gr','mt'].indexOf(State.getResponse('website_status.clients_country')) > -1);
         const is_mlt_mf_client = ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'].indexOf(Client.get('residence')) > -1
         || ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'].indexOf(State.getResponse('website_status.clients_country')) > -1;
-        if (is_logged && (is_be_client || is_mlt_mf_client)){
+        if (is_logged && (is_be_client || is_mlt_mf_client || is_mf_client)){
             $container.empty();
             $container.empty();
             $date_container.setVisibility(0);

@@ -20,6 +20,7 @@ const GTM                   = require('../../_common/base/gtm');
 const LiveChat              = require('../../_common/base/livechat');
 const Login                 = require('../../_common/base/login');
 const toTitleCase           = require('../../_common/string_util').toTitleCase;
+const State            = require('../../_common/storage').State;
 
 const BinaryLoader = (() => {
     let container;
@@ -120,13 +121,15 @@ const BinaryLoader = (() => {
         only_virtual           : () => localize('This feature is available to demo accounts only.'),
         only_real              : () => localize('You are using a demo account. Please switch to a real account or create one to access Cashier.'),
         not_authenticated      : () => localize('This page is only available to logged out clients.'),
-        no_mf                  : () => localize('Unfortunately, trading options isn\'t possible in your country'),
-        no_mf_switch_to_options: () => localize('Unfortunately, trading options isn\'t possible in your country'),
-        no_options_mf_mx       : () => localize('Sorry, options trading isn’t available in the United Kingdom and the Isle of Man'),
-        options_blocked        : () => localize('Unfortunately, trading options isn\'t possible in your country'),
-        residence_blocked      : () => localize('This page is not available in your country of residence.'),
-        not_deactivated        : () => localize('Page not available, you did not deactivate your account.'),
-        only_deriv             : () => localize('Unfortunately, this service isn’t available in your country. If you’d like to trade multipliers, try DTrader on Deriv.'),
+        no_mf                  : () => localize('Binary options trading is not available in your Multipliers account.'),
+        no_mf_switch_to_options: () => localize('Binary options trading is not available via your Multipliers account.<br/>Please switch back to your Options account.'),
+        
+        no_mf_switch_to_options_1: () => localize('Unfortunately, trading options isn\'t possible in your country'),
+        no_options_mf_mx         : () => localize('Sorry, options trading isn’t available in the United Kingdom and the Isle of Man'),
+        options_blocked          : () => localize('Binary options trading is not available in your country.'),
+        residence_blocked        : () => localize('This page is not available in your country of residence.'),
+        not_deactivated          : () => localize('Page not available, you did not deactivate your account.'),
+        only_deriv               : () => localize('Unfortunately, this service isn’t available in your country. If you’d like to trade multipliers, try DTrader on Deriv.'),
     };
 
     const error_actions = {
@@ -169,7 +172,13 @@ const BinaryLoader = (() => {
                 if (config.msg_residence_blocked) {
                     displayMessage(error_messages.residence_blocked());
                 } else if (response.authorize.account_list.some(account => ['iom', 'malta'].includes(account.landing_company_name))) {
-                    displayMessage(error_messages.no_mf_switch_to_options());
+                    const is_be_client = (Client.get('residence') === 'be' || State.getResponse('website_status.clients_country') === 'be');
+                    const is_logged = ClientBase.isLoggedIn();
+                    const is_mlt_mf_client = ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'].indexOf(Client.get('residence')) > -1
+        || ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'].indexOf(State.getResponse('website_status.clients_country')) > -1;
+                    if (is_logged && (is_be_client || is_mlt_mf_client)) {
+                        displayMessage(error_messages.no_mf_switch_to_options_1());
+                    } else displayMessage(error_messages.no_mf_switch_to_options());
                 } else {
                     displayMessage(error_messages.no_mf());
                 }

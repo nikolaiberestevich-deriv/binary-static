@@ -35,19 +35,16 @@ const AssetIndexUI = (() => {
     };
 
     const populateTable = () => {
-        const mlt_countries_list = ['au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
-        if (!active_symbols || !asset_index) return;
-        if (ClientBase.isLoggedIn() &&
-         (ClientBase.get('landing_company_shortcode') === 'malta'
-         || ClientBase.get('landing_company_shortcode') === 'maltainvest'
-             || mlt_countries_list.indexOf(Client.get('residence')) > -1
-            || mlt_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1)
-        ){
+        const is_be_client = (Client.get('residence') === 'be' || State.getResponse('website_status.clients_country') === 'be');
+        const is_logged = ClientBase.isLoggedIn();
+        const is_mlt_mf_client = ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'].indexOf(Client.get('residence')) > -1
+        || ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'].indexOf(State.getResponse('website_status.clients_country')) > -1;
+        if (is_logged && (is_be_client || is_mlt_mf_client)) {
             $('#asset-index').empty();
             $('#empty-asset-index').empty().append(localize('Unfortunately, trading options isn\'t possible in your country')).setVisibility(1);
             return;
         }
-
+        if (!active_symbols || !asset_index) return;
         if (!asset_index.length) {
             $container.empty();
             $('#empty-asset-index').setVisibility(1);

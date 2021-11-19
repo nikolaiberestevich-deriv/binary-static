@@ -33,14 +33,11 @@ const Process = (() => {
     const processActiveSymbols = () => {
         BinarySocket.send({ active_symbols: 'brief' }).then((response) => {
             // check of user country and license
-            const mlt_countries_list = ['au','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie','be'];
-            const is_show_country_error = ClientBase.isLoggedIn() &&
-            (ClientBase.get('landing_company_shortcode') === 'malta'
-            || ClientBase.get('landing_company_shortcode') === 'maltainvest'
-             || mlt_countries_list.indexOf(Client.get('residence')) > -1
-            || mlt_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1);
-
-            if (is_show_country_error){
+            const is_be_client = (Client.get('residence') === 'be' || State.getResponse('website_status.clients_country') === 'be');
+            const is_logged = ClientBase.isLoggedIn();
+            const is_mlt_mf_client = ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'].indexOf(Client.get('residence')) > -1
+        || ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'].indexOf(State.getResponse('website_status.clients_country')) > -1;
+            if (is_logged && (is_be_client || is_mlt_mf_client)){
                 $('#content').empty().html($('<div/>', { class: 'container' }).append($('<p/>', { class: 'notice-msg center-text', text: localize('Unfortunately, trading options isn\'t possible in your country') })));
                 
             } else if (response.active_symbols && response.active_symbols.length) {

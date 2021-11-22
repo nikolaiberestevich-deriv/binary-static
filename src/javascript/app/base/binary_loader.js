@@ -167,20 +167,26 @@ const BinaryLoader = (() => {
         } else {
             loadActiveScript(config);
         }
+        
+        if (Client.isLoggedIn()) {
+            BinarySocket.wait('authorize').then(() => {
+                const mlt_mf_countries_list = ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'];
+                const mf_countries_list = ['it','fr','de','lu','es','gr','mt'];
+                const is_be_client = Client.get('residence') === 'be' || State.getResponse('website_status.clients_country') === 'be';
+                const is_mlt_acc_type = (ClientBase.get('landing_company_shortcode') === 'malta' || Client.hasAccountType('virtual')) && (mlt_mf_countries_list.some(Client.get('residence')  || mlt_mf_countries_list.some(State.getResponse('website_status.clients_country'))));
+                const is_mf_client = ClientBase.get('landing_company_shortcode') === 'virtual' && (mf_countries_list.some(State.getResponse('website_status.clients_country')) || mf_countries_list.some(State.getResponse('website_status.clients_country')));
+        
+                if (is_be_client || is_mlt_acc_type || is_mf_client)  {
+                    displayMessage(error_messages.no_mf_switch_to_options_1());
+                }
+            });
+        }
         if (config.no_mf && Client.isLoggedIn() && Client.isAccountOfType('financial')) {
             BinarySocket.wait('authorize').then((response) => {
                 if (config.msg_residence_blocked) {
                     displayMessage(error_messages.residence_blocked());
                 } else if (response.authorize.account_list.some(account => ['iom', 'malta'].includes(account.landing_company_name))) {
-                    const is_be_client = (Client.get('residence') === 'be' || State.getResponse('website_status.clients_country') === 'be');
-                    const is_logged = ClientBase.isLoggedIn();
-                    const is_mf_client = Client.hasAccountType('gaming') && (['it','fr','de','lu','es','gr','mt'].indexOf(State.getResponse('website_status.clients_country')) > -1
-        || ['it','fr','de','lu','es','gr','mt'].indexOf(State.getResponse('website_status.clients_country')) > -1);
-                    const is_mlt_mf_client = ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'].indexOf(Client.get('residence')) > -1
-        || ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'].indexOf(State.getResponse('website_status.clients_country')) > -1;
-                    if (is_logged && (is_be_client || is_mlt_mf_client || is_mf_client))  {
-                        displayMessage(error_messages.no_mf_switch_to_options_1());
-                    } else displayMessage(error_messages.no_mf_switch_to_options());
+                    displayMessage(error_messages.no_mf_switch_to_options());
                 } else {
                     displayMessage(error_messages.no_mf());
                 }

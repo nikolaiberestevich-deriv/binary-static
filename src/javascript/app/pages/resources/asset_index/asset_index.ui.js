@@ -4,6 +4,10 @@ const Table            = require('../../../common/attach_dom/table');
 const Login            = require('../../../../_common/base/login');
 const CommonFunctions  = require('../../../../_common/common_functions');
 const showLoadingImage = require('../../../../_common/utility').showLoadingImage;
+const ClientBase       = require('../../../../_common/base/client_base');
+const Client           = require('../../../base/client');
+const State             = require('../../../../_common/storage').State;
+const localize          = require('../../../../_common/localize').localize;
 
 const AssetIndexUI = (() => {
     let $container,
@@ -18,7 +22,6 @@ const AssetIndexUI = (() => {
         $('#empty-asset-index').setVisibility(0);
         asset_index = market_columns = undefined;
         active_symbols = undefined;
-
         if ($container.contents().length) return;
 
         showLoadingImage($container[0]);
@@ -30,6 +33,20 @@ const AssetIndexUI = (() => {
     };
 
     const populateTable = () => {
+
+        const is_logged = ClientBase.isLoggedIn();
+        const mlt_mf_countries_list = ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'];
+        const mf_countries_list = ['it','fr','de','lu','es','gr','mt'];
+        const is_be_client = is_logged && (Client.get('residence') === 'be' || State.getResponse('website_status.clients_country') === 'be');
+        const is_mlt_acc_type = (ClientBase.get('landing_company_shortcode') === 'malta' || Client.hasAccountType('virtual')) && ((mlt_mf_countries_list.indexOf(Client.get('residence') > -1)  || (mlt_mf_countries_list.indexOf(State.getResponse('website_status.clients_country') > -1))));
+        const is_mf_client = (ClientBase.get('landing_company_shortcode') === 'virtual') && ((mf_countries_list.indexOf(Client.get('residence') > -1)  || (mf_countries_list.indexOf(State.getResponse('website_status.clients_country') > -1))));
+
+        if (is_logged && (is_be_client || is_mlt_acc_type || is_mf_client)) {
+            console.log("asset -populateTable");
+            $('#asset-index').empty();
+            $('#empty-asset-index').empty().append(localize('Unfortunately, trading options isn\'t possible in your country')).setVisibility(1);
+            return;
+        }
         if (!active_symbols || !asset_index) return;
 
         if (!asset_index.length) {

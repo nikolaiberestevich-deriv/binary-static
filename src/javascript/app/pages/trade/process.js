@@ -22,6 +22,8 @@ const getVisibleElement = require('../../../_common/common_functions').getVisibl
 const localize          = require('../../../_common/localize').localize;
 const State             = require('../../../_common/storage').State;
 const getPropertyValue  = require('../../../_common/utility').getPropertyValue;
+const ClientBase       = require('../../../_common/base/client_base');
+const Client           = require('../../base/client');
 
 const Process = (() => {
     /*
@@ -30,7 +32,15 @@ const Process = (() => {
      */
     const processActiveSymbols = () => {
         BinarySocket.send({ active_symbols: 'brief' }).then((response) => {
-            if (response.active_symbols && response.active_symbols.length) {
+            const is_be_client = Client.isLoggedIn() && ((Client.get('residence') === 'be') || (State.getResponse('website_status.clients_country') === 'be'));
+            const mlt_mf_countries_list = ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'];
+            const mf_countries_list = ['it','fr','de','lu','es','gr','mt'];
+            const is_mlt_acc_type = (ClientBase.get('landing_company_shortcode') === 'malta' || Client.hasAccountType('virtual')) && ((mlt_mf_countries_list.indexOf(Client.get('residence') > -1)  || (mlt_mf_countries_list.indexOf(State.getResponse('website_status.clients_country') > -1))));
+            const is_mf_client = (ClientBase.get('landing_company_shortcode') === 'virtual') && ((mf_countries_list.indexOf(Client.get('residence') > -1)  || (mf_countries_list.indexOf(State.getResponse('website_status.clients_country') > -1))));
+    
+            if (is_be_client || is_mlt_acc_type || is_mf_client){
+                $('#content').empty().html($('<div/>', { class: 'container' }).append($('<p/>', { class: 'notice-msg center-text', text: localize('Unfortunately, trading options isn\'t possible in your country') })));
+            }else if (response.active_symbols && response.active_symbols.length) {
                 // populate the Symbols object
                 Symbols.details(response);
 

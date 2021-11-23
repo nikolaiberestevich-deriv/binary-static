@@ -41,7 +41,7 @@ const AssetIndexUI = (() => {
         const is_mlt_acc_type = (ClientBase.get('landing_company_shortcode') === 'malta' || Client.hasAccountType('virtual')) && ((mlt_mf_countries_list.indexOf(Client.get('residence') > -1)  || (mlt_mf_countries_list.indexOf(State.getResponse('website_status.clients_country') > -1))));
         const is_mf_client = (ClientBase.get('landing_company_shortcode') === 'virtual') && ((mf_countries_list.indexOf(Client.get('residence') > -1)  || (mf_countries_list.indexOf(State.getResponse('website_status.clients_country') > -1))));
 
-        if (is_logged && (is_be_client || is_mlt_acc_type || is_mf_client)) {
+        if (is_be_client || is_mlt_acc_type || is_mf_client) {
             console.log("asset -populateTable");
             $('#asset-index').empty();
             $('#empty-asset-index').empty().append(localize('Unfortunately, trading options isn\'t possible in your country')).setVisibility(1);

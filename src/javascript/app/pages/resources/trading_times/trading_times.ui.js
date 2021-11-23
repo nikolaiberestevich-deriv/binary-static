@@ -10,6 +10,7 @@ const showLoadingImage = require('../../../../_common/utility').showLoadingImage
 const toISOFormat      = require('../../../../_common/string_util').toISOFormat;
 const Client           = require('../../../base/client');
 const State            = require('../../../../../javascript/_common/storage').State;
+const ClientBase = require('../../../../_common/base/client_base');
 
 const TradingTimesUI = (() => {
     let $date,
@@ -98,7 +99,21 @@ const TradingTimesUI = (() => {
     const populateTable = () => {
         let markets;
         const is_uk_residence = (Client.get('residence') === 'gb' || State.getResponse('website_status.clients_country') === 'gb');
-        
+        const is_be_client = Client.isLoggedIn() && ((Client.get('residence') === 'be') || (State.getResponse('website_status.clients_country') === 'be'));
+        const mlt_mf_countries_list = ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'];
+        const mf_countries_list = ['it','fr','de','lu','es','gr','mt'];
+        const is_mlt_acc_type = (ClientBase.get('landing_company_shortcode') === 'malta' || Client.hasAccountType('virtual')) && ((mlt_mf_countries_list.indexOf(Client.get('residence') > -1)  || (mlt_mf_countries_list.indexOf(State.getResponse('website_status.clients_country') > -1))));
+        const is_mf_client = (ClientBase.get('landing_company_shortcode') === 'virtual') && ((mf_countries_list.indexOf(Client.get('residence') > -1)  || (mf_countries_list.indexOf(State.getResponse('website_status.clients_country') > -1))));
+
+        if (is_be_client || is_mlt_acc_type || is_mf_client){
+            $container.empty();
+            $container.empty();
+            $date_container.setVisibility(0);
+            $date_notice.setVisibility(0);
+            $empty_trading_times.setVisibility(1);
+            $('#empty-trading-times').empty().append(localize('Unfortunately, trading options isn\'t possible in your country'));
+            return;
+        }
         if (!active_symbols || !trading_times) return;
         if (!active_symbols.length) {
             $container.empty();

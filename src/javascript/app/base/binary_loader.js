@@ -20,7 +20,6 @@ const GTM                   = require('../../_common/base/gtm');
 const LiveChat              = require('../../_common/base/livechat');
 const Login                 = require('../../_common/base/login');
 const toTitleCase           = require('../../_common/string_util').toTitleCase;
-const State = require('../../_common/storage').State;
 
 const BinaryLoader = (() => {
     let container;
@@ -117,18 +116,18 @@ const BinaryLoader = (() => {
     };
 
     const error_messages = {
-        login                  : () => localize('Please [_1]log in[_2] or [_3]sign up[_4] to view this page.', [`<a href="${'javascript:;'}">`, '</a>', `<a href="${urlFor('new-account')}">`, '</a>']),
-        only_virtual           : () => localize('This feature is available to demo accounts only.'),
-        only_real              : () => localize('You are using a demo account. Please switch to a real account or create one to access Cashier.'),
-        not_authenticated      : () => localize('This page is only available to logged out clients.'),
-        no_mf                  : () => localize('Binary options trading is not available in your Multipliers account.'),
-        no_mf_switch_to_options: () => localize('Binary options trading is not available via your Multipliers account.<br/>Please switch back to your Options account.'),
+        login                    : () => localize('Please [_1]log in[_2] or [_3]sign up[_4] to view this page.', [`<a href="${'javascript:;'}">`, '</a>', `<a href="${urlFor('new-account')}">`, '</a>']),
+        only_virtual             : () => localize('This feature is available to demo accounts only.'),
+        only_real                : () => localize('You are using a demo account. Please switch to a real account or create one to access Cashier.'),
+        not_authenticated        : () => localize('This page is only available to logged out clients.'),
+        no_mf                    : () => localize('Binary options trading is not available in your Multipliers account.'),
+        no_mf_switch_to_options  : () => localize('Binary options trading is not available via your Multipliers account.<br/>Please switch back to your Options account.'),
         no_mf_switch_to_options_1: () => localize('Unfortunately, trading options isn\'t possible in your country'),
         no_options_mf_mx         : () => localize('Sorry, options trading isn’t available in the United Kingdom and the Isle of Man'),
         options_blocked          : () => localize('Binary options trading is not available in your country.'),
         residence_blocked        : () => localize('This page is not available in your country of residence.'),
         not_deactivated          : () => localize('Page not available, you did not deactivate your account.'),
-        only_deriv               : () => localize('Unfortunately, this service isn’t available in your country. If you’d like to trade multipliers, try DTrader on Deriv.'),};
+        only_deriv               : () => localize('Unfortunately, this service isn’t available in your country. If you’d like to trade multipliers, try DTrader on Deriv.') };
 
     const error_actions = {
         only_deriv: () => ({ localized_title: localize('Go to DTrader'), target_url: 'https://app.deriv.com' }),
@@ -165,19 +164,7 @@ const BinaryLoader = (() => {
         } else {
             loadActiveScript(config);
         }
-        if (Client.isLoggedIn()) {
-            BinarySocket.wait('authorize').then(() => {
-                const mlt_mf_countries_list = ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'];
-                const mf_countries_list = ['it','fr','de','lu','es','gr','mt'];
-                const is_be_client = Client.isLoggedIn() && ((Client.get('residence') === 'be') || (State.getResponse('website_status.clients_country') === 'be'));
-                const is_mlt_acc_type = (ClientBase.get('landing_company_shortcode') === 'malta' || ClientBase.get('landing_company_shortcode') === 'virtual') && (mlt_mf_countries_list.some(Client.get('residence')  || mlt_mf_countries_list.some(State.getResponse('website_status.clients_country'))));
-                const is_mf_client = ClientBase.get('landing_company_shortcode') === 'virtual' && (mf_countries_list.some(State.getResponse('website_status.clients_country')) || mf_countries_list.some(State.getResponse('website_status.clients_country')));
 
-                if (is_be_client || is_mlt_acc_type || is_mf_client)  {
-                    displayMessage(error_messages.no_mf_switch_to_options_1());
-                }
-            });
-        }
         if (config.no_mf && Client.isLoggedIn() && Client.isAccountOfType('financial')) {
             BinarySocket.wait('authorize').then((response) => {
                 if (config.msg_residence_blocked) {

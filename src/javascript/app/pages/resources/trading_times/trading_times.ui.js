@@ -102,9 +102,10 @@ const TradingTimesUI = (() => {
         const is_be_client = Client.isLoggedIn() && ((Client.get('residence') === 'be') || (State.getResponse('website_status.clients_country') === 'be'));
         const mlt_mf_countries_list = ['at','lv','bg','lt','hr','cy','cz','nl','dk','pl','ee','pt','fi','ro','sk','si','hu','se','ie'];
         const mf_countries_list = ['it','fr','de','lu','es','gr','mt'];
-        const is_mlt_acc_type = (ClientBase.get('landing_company_shortcode') === 'malta' || Client.hasAccountType('virtual')) && ((mlt_mf_countries_list.indexOf(Client.get('residence') > -1)  || (mlt_mf_countries_list.indexOf(State.getResponse('website_status.clients_country') > -1))));
-        const is_mf_client = (ClientBase.get('landing_company_shortcode') === 'virtual') && ((mf_countries_list.indexOf(Client.get('residence') > -1)  || (mf_countries_list.indexOf(State.getResponse('website_status.clients_country') > -1))));
-
+        const mlt_mf_residence = (Client.get('residence') && (mlt_mf_countries_list.indexOf(Client.get('residence')) > -1))  || (State.getResponse('website_status.clients_country') && (mlt_mf_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1));
+        const mf_residence = (Client.get('residence') && (mf_countries_list.indexOf(Client.get('residence')) > -1))  || (State.getResponse('website_status.clients_country') && (mf_countries_list.indexOf(State.getResponse('website_status.clients_country')) > -1));
+        const is_mlt_acc_type = mlt_mf_residence && (ClientBase.get('landing_company_shortcode') === 'malta' || Client.hasAccountType('virtual'));
+        const is_mf_client = mf_residence && (ClientBase.get('landing_company_shortcode') === 'virtual') ;
         if (is_be_client || is_mlt_acc_type || is_mf_client){
             $container.empty();
             $container.empty();

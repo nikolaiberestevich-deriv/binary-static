@@ -559,7 +559,6 @@ const Regulation = () => {
                     <p>{it.L('Deriv (MX) Ltd, Millennium House, Level 1, Victoria Road, Douglas IM2 4RW, Isle of Man, is licensed and regulated in Great Britain by the Gambling Commission under [_1]account no. 39172.[_1]', '<a href="https://www.gamblingcommission.gov.uk/public-register/business/detail/39172" target="_blank" rel="noopener noreferrer">')}</p>
                     <p>{it.L('Clients in the UK who wish to trade gambling products will have their accounts opened with Deriv (MX) Ltd.')}</p>
                     <RegulatorText />
-                    <RegulatorImage href='https://www.gov.im/gambling/' image='images/pages/regulation/isle-of-man.png' />
                 </Box>
             </div>
 
